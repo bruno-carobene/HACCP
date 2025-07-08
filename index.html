@@ -3,164 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrazione Prodotto HACCP</title>
-    <!-- Includiamo Tailwind CSS per uno stile moderno e responsive -->
+    <title>Sistema HACCP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Aggiungiamo un font più gradevole */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Stile per il date picker per renderlo più visibile in dark mode */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-        }
     </style>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen py-12">
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
 
-    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md mx-4">
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-cyan-400 mb-2">Sistema HACCP</h1>
+        <p class="text-gray-400 mb-12">Seleziona l'operazione da eseguire</p>
         
-        <!-- Titolo dell'app -->
-        <h1 class="text-3xl font-bold text-center mb-2 text-cyan-400">Registrazione Prodotto</h1>
-        <p class="text-center text-gray-400 mb-8">Sistema HACCP</p>
-
-        <!-- Form per l'inserimento dei dati -->
-        <form id="dataForm">
-            <!-- Nome Prodotto -->
-            <div class="mb-4">
-                <label for="nome_prodotto" class="block mb-2 text-sm font-medium text-gray-300">Qual è il nome del prodotto?</label>
-                <input type="text" id="nome_prodotto" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
-            </div>
+        <div class="space-y-6">
+            <!-- Link alla pagina di gestione magazzino -->
+            <a href="./magazzino.html" class="block w-full max-w-sm mx-auto bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-transform transform hover:scale-105">
+                Gestione Magazzino
+            </a>
             
-            <!-- Tipologia Prodotto -->
-            <div class="mb-4">
-                <label for="tipologia_prodotto" class="block mb-2 text-sm font-medium text-gray-300">Qual è la tipologia del prodotto?</label>
-                <select id="tipologia_prodotto" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
-                    <option value="" disabled selected>Seleziona un'opzione...</option>
-                    <option value="secco">Secco</option>
-                    <option value="carne">Carne</option>
-                    <option value="formaggio">Formaggio</option>
-                    <option value="pesce">Pesce</option>
-                    <option value="frutta">Frutta</option>
-                    <option value="verdura">Verdura</option>
-                </select>
-            </div>
-
-            <!-- Modalità Conservazione -->
-            <div class="mb-4">
-                <label for="modalita_conservazione" class="block mb-2 text-sm font-medium text-gray-300">Qual è la modalità di conservazione?</label>
-                <select id="modalita_conservazione" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
-                    <option value="" disabled selected>Seleziona un'opzione...</option>
-                    <option value="frigorifero">Frigorifero</option>
-                    <option value="surgelatore">Surgelatore</option>
-                    <option value="scaffale">Scaffale</option>
-                </select>
-            </div>
-
-            <!-- Luogo Conservazione -->
-            <div class="mb-4">
-                <label for="luogo_conservazione" class="block mb-2 text-sm font-medium text-gray-300">Qual è il luogo di conservazione?</label>
-                <select id="luogo_conservazione" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
-                    <option value="" disabled selected>Seleziona un'opzione...</option>
-                    <option value="dispensa">Dispensa</option>
-                    <option value="reparto formaggi">Reparto Formaggi</option>
-                    <option value="reparto carni">Reparto Carni</option>
-                    <option value="reparto pesce">Reparto Pesce</option>
-                    <option value="reparto ortofrutta">Reparto Ortofrutta</option>
-                    <option value="congelatore">Congelatore</option>
-                </select>
-            </div>
-
-            <!-- Data Ingresso -->
-            <div class="mb-4">
-                <label for="data_ingresso" class="block mb-2 text-sm font-medium text-gray-300">Qual è la data di ingresso?</label>
-                <input type="date" id="data_ingresso" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
-            </div>
-
-            <!-- Data Scadenza -->
-            <div class="mb-4">
-                <label for="data_scadenza" class="block mb-2 text-sm font-medium text-gray-300">Qual è la data di scadenza?</label>
-                <input type="date" id="data_scadenza" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
-            </div>
-
-            <!-- Data Uscita -->
-            <div class="mb-6">
-                <label for="data_uscita" class="block mb-2 text-sm font-medium text-gray-300">Qual è la data di uscita? (Opzionale)</label>
-                <input type="date" id="data_uscita" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5">
-            </div>
-            
-            <!-- Bottone di invio -->
-            <button type="submit" id="submitButton" class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:outline-none focus:ring-cyan-800 font-medium rounded-lg text-sm w-full px-5 py-3 text-center transition-colors duration-300">
-                Registra Prodotto
-            </button>
-        </form>
-
-        <!-- Messaggio di stato per l'utente -->
-        <p id="status" class="text-center mt-6 text-gray-400 h-5"></p>
-
+            <!-- Link alla pagina di registrazione temperature -->
+            <a href="./temperature.html" class="block w-full max-w-sm mx-auto bg-violet-600 hover:bg-violet-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-transform transform hover:scale-105">
+                Registrazione Temperature
+            </a>
+        </div>
     </div>
-
-    <script>
-        const form = document.getElementById('dataForm');
-        const statusEl = document.getElementById('status');
-        const submitButton = document.getElementById('submitButton');
-
-        // IMPORTANTE: Incolla qui il tuo URL del webhook di Make.com!
-        const webhookUrl = 'https://hook.eu2.make.com/hq2drb7yum4sj76f9yglxdt7sqjyn8a3';
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            if (webhookUrl === 'INCOLLA_QUI_IL_TUO_URL_DEL_WEBHOOK_MAKE') {
-                statusEl.textContent = 'Errore: URL del webhook non configurato.';
-                statusEl.classList.add('text-red-400');
-                return;
-            }
-
-            statusEl.textContent = 'Invio in corso...';
-            statusEl.classList.remove('text-green-400', 'text-red-400');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Attendere...';
-            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-
-            // Creiamo un oggetto con i dati del form.
-            // Le chiavi corrispondono alle colonne del tuo Google Sheet.
-            const formData = {
-                "Nome_Prodotto": document.getElementById('nome_prodotto').value,
-                "Tipologia_Prodotto": document.getElementById('tipologia_prodotto').value,
-                "Tipologia_Conservazione": document.getElementById('modalita_conservazione').value,
-                "Luogo_Conservazione": document.getElementById('luogo_conservazione').value,
-                "Data_Ingresso": document.getElementById('data_ingresso').value,
-                "Data_Scadenza": document.getElementById('data_scadenza').value,
-                "Data_Uscita": document.getElementById('data_uscita').value
-            };
-
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => {
-                statusEl.textContent = 'Prodotto registrato con successo!';
-                statusEl.classList.add('text-green-400');
-                form.reset();
-            })
-            .catch(error => {
-                console.error('Errore durante la richiesta fetch:', error);
-                statusEl.textContent = 'Si è verificato un errore di rete.';
-                statusEl.classList.add('text-red-400');
-            })
-            .finally(() => {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Registra Prodotto';
-                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
-            });
-        });
-    </script>
 
 </body>
 </html>
