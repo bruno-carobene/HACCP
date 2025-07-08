@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione Prodotto HACCP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen py-12">
+
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md mx-4 relative">
+        
+        <!-- Pulsante per tornare alla Home -->
+        <a href="./index.html" class="absolute top-4 left-4 text-cyan-400 hover:text-cyan-300">&larr; Home</a>
+
+        <h1 class="text-3xl font-bold text-center mb-2 text-cyan-400 mt-8">Registrazione Prodotto</h1>
+        <p class="text-center text-gray-400 mb-8">Sistema HACCP</p>
+
+        <form id="dataForm">
+            <!-- Nome Prodotto -->
+            <div class="mb-4">
+                <label for="nome_prodotto" class="block mb-2 text-sm font-medium text-gray-300">Nome del prodotto</label>
+                <input type="text" id="nome_prodotto" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
+            </div>
+            
+            <!-- Tipologia Prodotto -->
+            <div class="mb-4">
+                <label for="tipologia_prodotto" class="block mb-2 text-sm font-medium text-gray-300">Tipologia del prodotto</label>
+                <select id="tipologia_prodotto" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
+                    <option value="" disabled selected>Seleziona un'opzione...</option>
+                    <option value="secco">Secco</option>
+                    <option value="carne">Carne</option>
+                    <option value="formaggio">Formaggio</option>
+                    <option value="pesce">Pesce</option>
+                    <option value="frutta">Frutta</option>
+                    <option value="verdura">Verdura</option>
+                </select>
+            </div>
+
+            <!-- Modalità Conservazione -->
+            <div class="mb-4">
+                <label for="modalita_conservazione" class="block mb-2 text-sm font-medium text-gray-300">Modalità di conservazione</label>
+                <select id="modalita_conservazione" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
+                    <option value="" disabled selected>Seleziona un'opzione...</option>
+                    <option value="frigorifero">Frigorifero</option>
+                    <option value="surgelatore">Surgelatore</option>
+                    <option value="scaffale">Scaffale</option>
+                </select>
+            </div>
+
+            <!-- Luogo Conservazione -->
+            <div class="mb-4">
+                <label for="luogo_conservazione" class="block mb-2 text-sm font-medium text-gray-300">Luogo di conservazione</label>
+                <select id="luogo_conservazione" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5" required>
+                    <option value="" disabled selected>Seleziona un'opzione...</option>
+                    <option value="dispensa">Dispensa</option>
+                    <option value="reparto formaggi">Reparto Formaggi</option>
+                    <option value="reparto carni">Reparto Carni</option>
+                    <option value="reparto pesce">Reparto Pesce</option>
+                    <option value="reparto ortofrutta">Reparto Ortofrutta</option>
+                    <option value="congelatore">Congelatore</option>
+                </select>
+            </div>
+
+            <!-- Date -->
+            <div class="mb-4">
+                <label for="data_ingresso" class="block mb-2 text-sm font-medium text-gray-300">Data di ingresso</label>
+                <input type="date" id="data_ingresso" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5" required>
+            </div>
+            <div class="mb-4">
+                <label for="data_scadenza" class="block mb-2 text-sm font-medium text-gray-300">Data di scadenza</label>
+                <input type="date" id="data_scadenza" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5" required>
+            </div>
+            <div class="mb-6">
+                <label for="data_uscita" class="block mb-2 text-sm font-medium text-gray-300">Data di uscita (Opzionale)</label>
+                <input type="date" id="data_uscita" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+            </div>
+            
+            <button type="submit" id="submitButton" class="text-white bg-cyan-600 hover:bg-cyan-700 font-medium rounded-lg text-sm w-full px-5 py-3 text-center">Registra Prodotto</button>
+        </form>
+        <p id="status" class="text-center mt-6 text-gray-400 h-5"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('dataForm');
+        const statusEl = document.getElementById('status');
+        const submitButton = document.getElementById('submitButton');
+        const webhookUrl = 'https://hook.eu2.make.com/hq2drb7yum4sj76f9yglxdt7sqjyn8a3';
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            statusEl.textContent = 'Invio in corso...';
+            submitButton.disabled = true;
+
+            const formData = {
+                "Nome_Prodotto": document.getElementById('nome_prodotto').value,
+                "Tipologia_Prodotto": document.getElementById('tipologia_prodotto').value,
+                "Tipologia_Conservazione": document.getElementById('modalita_conservazione').value,
+                "Luogo_Conservazione": document.getElementById('luogo_conservazione').value,
+                "Data_Ingresso": document.getElementById('data_ingresso').value,
+                "Data_Scadenza": document.getElementById('data_scadenza').value,
+                "Data_Uscita": document.getElementById('data_uscita').value
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                statusEl.textContent = 'Prodotto registrato con successo!';
+                form.reset();
+            })
+            .catch(error => {
+                statusEl.textContent = 'Si è verificato un errore di rete.';
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
