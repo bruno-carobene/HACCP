@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione Temperature HACCP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen py-12">
+
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md mx-4 relative">
+        
+        <!-- Pulsante per tornare alla Home -->
+        <a href="./index.html" class="absolute top-4 left-4 text-violet-400 hover:text-violet-300">&larr; Home</a>
+
+        <h1 class="text-3xl font-bold text-center mb-2 text-violet-400 mt-8">Registrazione Temperature</h1>
+        <p class="text-center text-gray-400 mb-8">Inserisci i valori rilevati</p>
+
+        <form id="tempForm">
+            <!-- Data Registrazione -->
+            <div class="mb-4">
+                <label for="data_registrazione" class="block mb-2 text-sm font-medium text-gray-300">Data di registrazione</label>
+                <input type="date" id="data_registrazione" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-violet-500 focus:border-violet-500 block w-full p-2.5" required>
+            </div>
+            
+            <p class="text-sm text-gray-400 mb-4">Lascia vuoti i reparti non misurati.</p>
+
+            <!-- Campi Temperatura -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="rep_formaggi" class="block mb-2 text-sm font-medium">Rep. Formaggi (°C)</label>
+                    <input type="text" inputmode="decimal" id="rep_formaggi" placeholder="Es. 4,5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                </div>
+                <div>
+                    <label for="rep_carne" class="block mb-2 text-sm font-medium">Rep. Carne (°C)</label>
+                    <input type="text" inputmode="decimal" id="rep_carne" placeholder="Es. 2,0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                </div>
+                <div>
+                    <label for="rep_pesce" class="block mb-2 text-sm font-medium">Rep. Pesce (°C)</label>
+                    <input type="text" inputmode="decimal" id="rep_pesce" placeholder="Es. 1,5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                </div>
+                <div>
+                    <label for="rep_ortofrutta" class="block mb-2 text-sm font-medium">Rep. Ortofrutta (°C)</label>
+                    <input type="text" inputmode="decimal" id="rep_ortofrutta" placeholder="Es. 6,0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="surgelatore" class="block mb-2 text-sm font-medium">Surgelatore (°C)</label>
+                    <input type="text" inputmode="decimal" id="surgelatore" placeholder="Es. -18,5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                </div>
+            </div>
+            
+            <button type="submit" id="submitButton" class="mt-8 text-white bg-violet-600 hover:bg-violet-700 font-medium rounded-lg text-sm w-full px-5 py-3 text-center">Registra Temperature</button>
+        </form>
+        <p id="status" class="text-center mt-6 text-gray-400 h-5"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('tempForm');
+        const statusEl = document.getElementById('status');
+        const submitButton = document.getElementById('submitButton');
+        // Webhook per le temperature
+        const webhookUrl = 'https://hook.eu2.make.com/2xgqynsqwkcbyxg5a96xh8ipdzgysk79';
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            statusEl.textContent = 'Invio in corso...';
+            submitButton.disabled = true;
+
+            // Funzione per leggere e formattare il valore della temperatura
+            const getTempValue = (id) => {
+                const element = document.getElementById(id);
+                // Sostituisce la virgola con il punto per compatibilità
+                return element.value.replace(',', '.');
+            };
+
+            const formData = {
+                "Data_Registrazione": document.getElementById('data_registrazione').value,
+                "Reparto_Formaggi": getTempValue('rep_formaggi'),
+                "Reparto_Carne": getTempValue('rep_carne'),
+                "Reparto_Pesce": getTempValue('rep_pesce'),
+                "Reparto_Ortofrutta": getTempValue('rep_ortofrutta'),
+                "Surgelatore": getTempValue('surgelatore')
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                statusEl.textContent = 'Temperature registrate con successo!';
+                form.reset();
+            })
+            .catch(error => {
+                statusEl.textContent = 'Si è verificato un errore di rete.';
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
