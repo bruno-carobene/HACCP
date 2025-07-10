@@ -17,10 +17,10 @@
         <h1 class="text-3xl font-bold text-center mb-2 text-emerald-400">Situazione Magazzino</h1>
         <p class="text-center text-gray-400 mb-8">Visualizza i prodotti attualmente in giacenza.</p>
 
-        <!-- Filtri -->
-        <div class="flex flex-col sm:flex-row gap-4 mb-8">
-            <input type="text" id="search" placeholder="Cerca per nome prodotto..." class="flex-grow bg-gray-700 border border-gray-600 rounded-lg p-2.5">
-            <select id="filter" class="bg-gray-700 border border-gray-600 rounded-lg p-2.5">
+        <!-- Filtri e Pulsante di Ricerca -->
+        <div class="flex flex-col sm:flex-row gap-4 mb-8 items-center">
+            <input type="text" id="search" placeholder="Cerca per nome prodotto..." class="flex-grow bg-gray-700 border border-gray-600 rounded-lg p-2.5 w-full sm:w-auto">
+            <select id="filter" class="bg-gray-700 border border-gray-600 rounded-lg p-2.5 w-full sm:w-auto">
                 <option value="">Tutte le tipologie</option>
                 <option value="secco">Secco</option>
                 <option value="carne">Carne</option>
@@ -29,6 +29,7 @@
                 <option value="frutta">Frutta</option>
                 <option value="verdura">Verdura</option>
             </select>
+            <button id="search-button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-lg w-full sm:w-auto">Cerca</button>
         </div>
 
         <!-- Tabella Risultati -->
@@ -53,6 +54,7 @@
         const webhookUrl = 'https://hook.eu2.make.com/16yfdylekixv39mshbhbxhhk46o4sfpk'; // <-- IMPORTANTE!
         const searchInput = document.getElementById('search');
         const filterSelect = document.getElementById('filter');
+        const searchButton = document.getElementById('search-button');
         const resultsBody = document.getElementById('results-body');
         const resultsTable = document.getElementById('results-table');
         const statusEl = document.getElementById('status');
@@ -68,34 +70,40 @@
                 const response = await fetch(webhookUrl);
                 const data = await response.json();
                 allProducts = data.prodotti || [];
-                renderProducts();
+                // Mostra tutti i prodotti inizialmente
+                renderProducts(true); 
             } catch (error) {
                 statusEl.textContent = 'Errore nel caricamento dei dati.';
                 console.error(error);
             }
         }
 
-        function renderProducts() {
+        function renderProducts(showAll = false) {
             const searchTerm = searchInput.value.toLowerCase();
             const filterTerm = filterSelect.value;
+            
+            let productsToRender = allProducts;
 
-            const filteredProducts = allProducts.filter(p => {
-                const matchesSearch = p.nome.toLowerCase().includes(searchTerm);
-                const matchesFilter = !filterTerm || p.tipologia === filterTerm;
-                return matchesSearch && matchesFilter;
-            });
+            // Applica i filtri solo se non è la visualizzazione iniziale
+            if (!showAll) {
+                 productsToRender = allProducts.filter(p => {
+                    const matchesSearch = p.nome.toLowerCase().includes(searchTerm);
+                    const matchesFilter = !filterTerm || p.tipologia === filterTerm;
+                    return matchesSearch && matchesFilter;
+                });
+            }
 
             resultsBody.innerHTML = ''; // Pulisce la tabella
 
-            if (filteredProducts.length === 0) {
+            if (productsToRender.length === 0) {
                 statusEl.textContent = 'Nessun prodotto trovato.';
                 resultsTable.classList.add('hidden');
             } else {
                 statusEl.textContent = '';
                 resultsTable.classList.remove('hidden');
-                filteredProducts.forEach(p => {
+                productsToRender.forEach(p => {
                     const row = document.createElement('tr');
-                    row.className = 'border-b border-gray-700';
+                    row.className = 'border-b border-gray-700 hover:bg-gray-700/50';
                     row.innerHTML = `
                         <td class="p-4">${p.nome}</td>
                         <td class="p-4 capitalize">${p.tipologia}</td>
@@ -106,8 +114,8 @@
             }
         }
 
-        searchInput.addEventListener('input', renderProducts);
-        filterSelect.addEventListener('change', renderProducts);
+        // Applica i filtri quando si clicca il pulsante Cerca
+        searchButton.addEventListener('click', () => renderProducts(false));
 
         // Carica i prodotti all'avvio della pagina
         document.addEventListener('DOMContentLoaded', fetchProducts);
