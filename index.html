@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema HACCP</title>
+    <title>Registro HACCP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -12,11 +12,21 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen py-12">
 
-    <div class="text-center">
-        <h1 class="text-4xl font-bold text-cyan-400 mb-2">Sistema HACCP</h1>
-        <p class="text-gray-400 mb-12">Seleziona l'operazione da eseguire</p>
+    <div class="text-center p-4">
+        
+        <!-- 1. Logo Aziendale -->
+        <!-- Il browser cercherà un file chiamato 'logo.jpg' nella stessa cartella del file index.html -->
+        <img src="./logo.jpg" alt="Logo Aziendale" class="mx-auto h-24 w-auto mb-6 rounded-lg">
+
+        <!-- 2. Titolo Aggiornato -->
+        <h1 class="text-4xl font-bold text-cyan-400 mb-4">Registro HACCP</h1>
+        
+        <!-- 3. Testo Descrittivo -->
+        <p class="text-gray-300 max-w-2xl mx-auto mb-12">
+            L’app che consente di registrare in modo semplice e rapido le merci in entrata e in uscita dal magazzino e che Integra un sistema per monitorare e salvare automaticamente le temperature dei frigoriferi. Garantisce tracciabilità, sicurezza alimentare e conformità alle normative vigenti.
+        </p>
         
         <div class="space-y-6">
             <!-- Link alla pagina di gestione magazzino -->
