@@ -32,27 +32,27 @@
             <p class="text-sm text-yellow-400 mb-2 text-center">Usa il punto (.) per i decimali. Es: 4.5 o -18.5</p>
             <p class="text-sm text-gray-400 mb-4 text-center">Lascia vuoti i reparti non misurati.</p>
 
-            <!-- Campi Temperatura -->
+            <!-- Campi Temperatura con pattern per numeri negativi/decimali -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="rep_formaggi" class="block mb-2 text-sm font-medium">Rep. Formaggi (°C)</label>
-                    <input type="text" inputmode="decimal" id="rep_formaggi" placeholder="Es. 4.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="text" inputmode="decimal" pattern="[-]?\\d*([.,])?\\d*" id="rep_formaggi" placeholder="Es. 4.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
                 <div>
                     <label for="rep_carne" class="block mb-2 text-sm font-medium">Rep. Carne (°C)</label>
-                    <input type="text" inputmode="decimal" id="rep_carne" placeholder="Es. 2.0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="text" inputmode="decimal" pattern="[-]?\\d*([.,])?\\d*" id="rep_carne" placeholder="Es. 2.0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
                 <div>
                     <label for="rep_pesce" class="block mb-2 text-sm font-medium">Rep. Pesce (°C)</label>
-                    <input type="text" inputmode="decimal" id="rep_pesce" placeholder="Es. 1.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="text" inputmode="decimal" pattern="[-]?\\d*([.,])?\\d*" id="rep_pesce" placeholder="Es. 1.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
                 <div>
                     <label for="rep_ortofrutta" class="block mb-2 text-sm font-medium">Rep. Ortofrutta (°C)</label>
-                    <input type="text" inputmode="decimal" id="rep_ortofrutta" placeholder="Es. 6.0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="text" inputmode="decimal" pattern="[-]?\\d*([.,])?\\d*" id="rep_ortofrutta" placeholder="Es. 6.0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
                 <div class="sm:col-span-2">
                     <label for="surgelatore" class="block mb-2 text-sm font-medium">Surgelatore (°C)</label>
-                    <input type="text" inputmode="decimal" id="surgelatore" placeholder="Es. -18.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="text" inputmode="decimal" pattern="[-]?\\d*([.,])?\\d*" id="surgelatore" placeholder="Es. -18.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
             </div>
             
