@@ -8,6 +8,18 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #16a34a; /* emerald-600 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen py-8">
@@ -17,7 +29,6 @@
         <h1 class="text-3xl font-bold text-center mb-2 text-emerald-400">Situazione Magazzino</h1>
         <p class="text-center text-gray-400 mb-8">Visualizza i prodotti attualmente in giacenza.</p>
 
-        <!-- Filtri e Pulsante di Ricerca -->
         <div class="flex flex-col sm:flex-row gap-4 mb-8 items-center">
             <input type="text" id="search" placeholder="Cerca per nome prodotto..." class="flex-grow bg-gray-700 border border-gray-600 rounded-lg p-2.5 w-full sm:w-auto">
             <select id="filter" class="bg-gray-700 border border-gray-600 rounded-lg p-2.5 w-full sm:w-auto">
@@ -32,8 +43,10 @@
             <button id="search-button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-lg w-full sm:w-auto">Cerca</button>
         </div>
 
-        <!-- Tabella Risultati -->
-        <div id="status" class="text-center text-lg py-10">Caricamento prodotti...</div>
+        <div id="status" class="text-center text-lg py-10 flex flex-col items-center justify-center">
+            <div class="loader mb-4"></div>
+            <span>Caricamento prodotti...</span>
+        </div>
         <div class="overflow-x-auto">
             <table class="min-w-full bg-gray-800 rounded-lg hidden" id="results-table">
                 <thead>
@@ -43,9 +56,7 @@
                         <th class="p-4 text-left">Data Scadenza</th>
                     </tr>
                 </thead>
-                <tbody id="results-body">
-                    <!-- Le righe verranno inserite qui dal JavaScript -->
-                </tbody>
+                <tbody id="results-body"></tbody>
             </table>
         </div>
     </div>
@@ -63,17 +74,16 @@
 
         async function fetchProducts() {
             if (webhookUrl.includes('INCOLLA_QUI')) {
-                statusEl.textContent = 'Errore: Webhook non configurato.';
+                statusEl.innerHTML = 'Errore: Webhook non configurato.';
                 return;
             }
             try {
                 const response = await fetch(webhookUrl);
                 const data = await response.json();
                 allProducts = data.prodotti || [];
-                // Mostra tutti i prodotti inizialmente
                 renderProducts(true); 
             } catch (error) {
-                statusEl.textContent = 'Errore nel caricamento dei dati.';
+                statusEl.innerHTML = 'Errore nel caricamento dei dati. Controlla lo scenario di Make.';
                 console.error(error);
             }
         }
@@ -84,7 +94,6 @@
             
             let productsToRender = allProducts;
 
-            // Applica i filtri solo se non è la visualizzazione iniziale
             if (!showAll) {
                  productsToRender = allProducts.filter(p => {
                     const matchesSearch = p.nome.toLowerCase().includes(searchTerm);
@@ -93,13 +102,14 @@
                 });
             }
 
-            resultsBody.innerHTML = ''; // Pulisce la tabella
+            resultsBody.innerHTML = ''; 
 
             if (productsToRender.length === 0) {
-                statusEl.textContent = 'Nessun prodotto trovato.';
+                statusEl.innerHTML = 'Nessun prodotto trovato.';
+                statusEl.classList.remove('hidden');
                 resultsTable.classList.add('hidden');
             } else {
-                statusEl.textContent = '';
+                statusEl.classList.add('hidden');
                 resultsTable.classList.remove('hidden');
                 productsToRender.forEach(p => {
                     const row = document.createElement('tr');
@@ -114,10 +124,8 @@
             }
         }
 
-        // Applica i filtri quando si clicca il pulsante Cerca
         searchButton.addEventListener('click', () => renderProducts(false));
 
-        // Carica i prodotti all'avvio della pagina
         document.addEventListener('DOMContentLoaded', fetchProducts);
     </script>
 </body>
