@@ -14,28 +14,34 @@
 </head>
 <body class="bg-gray-900 text-white flex items-center justify-center min-h-screen py-12">
 
-    <div class="text-center p-4">
+    <div class="text-center p-4 w-full max-w-lg">
         
-        <!-- 1. Logo Aziendale -->
-        <!-- Il browser cercherà un file chiamato 'logo.jpg' nella stessa cartella del file index.html -->
-        <img src="./logo.jpg" alt="Logo Aziendale" class="mx-auto h-24 w-auto mb-6 rounded-lg">
+        <img src="./logo.jpg" alt="Logo Aziendale" class="mx-auto h-24 w-auto mb-6 rounded-lg" onerror="this.style.display='none'">
 
-        <!-- 2. Titolo Aggiornato -->
         <h1 class="text-4xl font-bold text-cyan-400 mb-4">Registro HACCP</h1>
         
-        <!-- 3. Testo Descrittivo -->
         <p class="text-gray-300 max-w-2xl mx-auto mb-12">
             L’app che consente di registrare in modo semplice e rapido le merci in entrata e in uscita dal magazzino e che Integra un sistema per monitorare e salvare automaticamente le temperature dei frigoriferi. Garantisce tracciabilità, sicurezza alimentare e conformità alle normative vigenti.
         </p>
         
-        <div class="space-y-6">
-            <!-- Link alla pagina di gestione magazzino -->
-            <a href="./magazzino.html" class="block w-full max-w-sm mx-auto bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-transform transform hover:scale-105">
-                Gestione Magazzino
+        <div class="space-y-4">
+            <!-- Bottone modificato -->
+            <a href="./magazzino.html" class="block w-full max-w-sm mx-auto bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-xl text-lg transition-transform transform hover:scale-105">
+                Ingresso Merci Magazzino
             </a>
             
-            <!-- Link alla pagina di registrazione temperature -->
-            <a href="./temperature.html" class="block w-full max-w-sm mx-auto bg-violet-600 hover:bg-violet-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-transform transform hover:scale-105">
+            <!-- Nuovo Bottone -->
+            <a href="./situazione.html" class="block w-full max-w-sm mx-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl text-lg transition-transform transform hover:scale-105">
+                Situazione Magazzino
+            </a>
+
+            <!-- Nuovo Bottone -->
+            <a href="./uscita.html" class="block w-full max-w-sm mx-auto bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-xl text-lg transition-transform transform hover:scale-105">
+                Uscita Merci Magazzino
+            </a>
+            
+            <!-- Bottone Temperature -->
+            <a href="./temperature.html" class="block w-full max-w-sm mx-auto bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-6 rounded-xl text-lg transition-transform transform hover:scale-105">
                 Registrazione Temperature
             </a>
         </div>
