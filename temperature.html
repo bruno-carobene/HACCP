@@ -19,7 +19,7 @@
         <a href="./index.html" class="absolute top-4 left-4 text-violet-400 hover:text-violet-300">&larr; Home</a>
 
         <h1 class="text-3xl font-bold text-center mb-2 text-violet-400 mt-8">Registrazione Temperature</h1>
-        <p class="text-center text-gray-400 mb-8">Inserisci i valori rilevati</p>
+        <p class="text-center text-gray-400 mb-4">Inserisci i valori rilevati</p>
 
         <form id="tempForm">
             <!-- Data Registrazione -->
@@ -28,29 +28,31 @@
                 <input type="date" id="data_registrazione" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-violet-500 focus:border-violet-500 block w-full p-2.5" required>
             </div>
             
-            <p class="text-sm text-gray-400 mb-4">Lascia vuoti i reparti non misurati.</p>
+            <!-- Istruzioni per l'utente -->
+            <p class="text-sm text-yellow-400 mb-2 text-center">Usa il punto (.) per i decimali. Es: 4.5 o -18.5</p>
+            <p class="text-sm text-gray-400 mb-4 text-center">Lascia vuoti i reparti non misurati.</p>
 
             <!-- Campi Temperatura -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="rep_formaggi" class="block mb-2 text-sm font-medium">Rep. Formaggi (°C)</label>
-                    <input type="text" inputmode="decimal" id="rep_formaggi" placeholder="Es. 4,5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="number" step="any" id="rep_formaggi" placeholder="Es. 4.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
                 <div>
                     <label for="rep_carne" class="block mb-2 text-sm font-medium">Rep. Carne (°C)</label>
-                    <input type="text" inputmode="decimal" id="rep_carne" placeholder="Es. 2,0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="number" step="any" id="rep_carne" placeholder="Es. 2.0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
                 <div>
                     <label for="rep_pesce" class="block mb-2 text-sm font-medium">Rep. Pesce (°C)</label>
-                    <input type="text" inputmode="decimal" id="rep_pesce" placeholder="Es. 1,5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="number" step="any" id="rep_pesce" placeholder="Es. 1.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
                 <div>
                     <label for="rep_ortofrutta" class="block mb-2 text-sm font-medium">Rep. Ortofrutta (°C)</label>
-                    <input type="text" inputmode="decimal" id="rep_ortofrutta" placeholder="Es. 6,0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="number" step="any" id="rep_ortofrutta" placeholder="Es. 6.0" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
                 <div class="sm:col-span-2">
                     <label for="surgelatore" class="block mb-2 text-sm font-medium">Surgelatore (°C)</label>
-                    <input type="text" inputmode="decimal" id="surgelatore" placeholder="Es. -18,5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <input type="number" step="any" id="surgelatore" placeholder="Es. -18.5" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
                 </div>
             </div>
             
@@ -63,7 +65,6 @@
         const form = document.getElementById('tempForm');
         const statusEl = document.getElementById('status');
         const submitButton = document.getElementById('submitButton');
-        // Webhook per le temperature
         const webhookUrl = 'https://hook.eu2.make.com/2xgqynsqwkcbyxg5a96xh8ipdzgysk79';
 
         form.addEventListener('submit', function(e) {
@@ -71,10 +72,9 @@
             statusEl.textContent = 'Invio in corso...';
             submitButton.disabled = true;
 
-            // Funzione per leggere e formattare il valore della temperatura
             const getTempValue = (id) => {
                 const element = document.getElementById(id);
-                // Sostituisce la virgola con il punto per compatibilità
+                // Sicurezza aggiuntiva: sostituisce la virgola se ancora presente
                 return element.value.replace(',', '.');
             };
 
