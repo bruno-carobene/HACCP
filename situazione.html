@@ -77,14 +77,27 @@
                 statusEl.innerHTML = 'Errore: Webhook non configurato.';
                 return;
             }
+            
+            let response; // Definiamo response qui per accedervi nel catch
             try {
-                const response = await fetch(webhookUrl);
+                response = await fetch(webhookUrl);
+                if (!response.ok) {
+                    // Se la risposta non è OK (es. errore 500 da Make)
+                    throw new Error(`Errore dal server: ${response.statusText}`);
+                }
                 const data = await response.json();
-                allProducts = data.prodotti || [];
+                
+                // Make a volte invia { "prodotti": null } se non trova nulla
+                allProducts = Array.isArray(data) ? data : []; 
                 renderProducts(true); 
+
             } catch (error) {
                 statusEl.innerHTML = 'Errore nel caricamento dei dati. Controlla lo scenario di Make.';
-                console.error(error);
+                console.error("Errore durante il fetch:", error);
+                // Logga la risposta grezza per debug se il JSON non è valido
+                if(response) {
+                    console.error("Risposta grezza dal server:", await response.text());
+                }
             }
         }
 
