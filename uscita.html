@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uscita Merci Magazzino</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        /* Stile per la riga selezionata */
+        .selected-row {
+            background-color: #ca8a04 !important; /* Colore ambrato per la selezione */
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen py-8">
+
+    <div class="w-full max-w-4xl mx-auto px-4">
+        <a href="./index.html" class="text-amber-400 hover:text-amber-300 mb-6 inline-block">&larr; Home</a>
+        <h1 class="text-3xl font-bold text-center mb-2 text-amber-400">Uscita Merci Magazzino</h1>
+        <p class="text-center text-gray-400 mb-8">Per registrare l'uscita di uno o più prodotti, selezionarli tra quelli presenti a magazzino e schiacciare il tasto "Data di uscita".</p>
+
+        <!-- Filtri e Ricerca -->
+        <div class="flex flex-col sm:flex-row gap-4 mb-8 items-center">
+            <input type="text" id="search" placeholder="Cerca per nome prodotto..." class="flex-grow bg-gray-700 border border-gray-600 rounded-lg p-2.5 w-full sm:w-auto">
+            <select id="filter" class="bg-gray-700 border border-gray-600 rounded-lg p-2.5 w-full sm:w-auto">
+                <option value="">Tutte le tipologie</option>
+                <option value="secco">Secco</option>
+                <option value="carne">Carne</option>
+                <option value="formaggio">Formaggio</option>
+                <option value="pesce">Pesce</option>
+                <option value="frutta">Frutta</option>
+                <option value="verdura">Verdura</option>
+            </select>
+            <button id="search-button" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 px-6 rounded-lg w-full sm:w-auto">Cerca</button>
+        </div>
+
+        <!-- Tabella Risultati -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-gray-800 rounded-lg" id="results-table">
+                <thead>
+                    <tr class="border-b border-gray-700">
+                        <th class="p-4 text-left">Nome Prodotto</th>
+                        <th class="p-4 text-left">Tipologia</th>
+                        <th class="p-4 text-left">Data Scadenza</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body"></tbody>
+            </table>
+        </div>
+        
+        <!-- Pulsante Data di Uscita -->
+        <div class="mt-8 text-center">
+            <button id="uscita-button" class="bg-amber-500 text-white font-bold py-3 px-8 rounded-lg disabled:bg-gray-600 disabled:cursor-not-allowed" disabled>
+                Registra Data di Uscita
+            </button>
+        </div>
+        <div id="success-message" class="text-center text-green-400 mt-4 h-6"></div>
+
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search');
+        const filterSelect = document.getElementById('filter');
+        const searchButton = document.getElementById('search-button');
+        const resultsBody = document.getElementById('results-body');
+        const uscitaButton = document.getElementById('uscita-button');
+        const successMessage = document.getElementById('success-message');
+        
+        // --- DATI DI ESEMPIO (MOCK DATA) ---
+        let allProducts = [
+            { rowNumber: 52, nome: "Fassona", tipologia: "carne", scadenza: "2025-05-11" },
+            { rowNumber: 63, nome: "Vitello", tipologia: "carne", scadenza: "2025-05-08" },
+            { rowNumber: 99, nome: "Pasta Alce Nero", tipologia: "secco", scadenza: "2026-04-25" },
+            { rowNumber: 100, nome: "Pasta Molisana", tipologia: "secco", scadenza: "2026-05-02" },
+            { rowNumber: 101, nome: "Pasta Rustichella", tipologia: "secco", scadenza: "2026-05-05" },
+            { rowNumber: 102, nome: "Ricotta", tipologia: "formaggio", scadenza: "2025-05-30" },
+            { rowNumber: 119, nome: "Tonno in scatola", tipologia: "pesce", scadenza: "2025-12-18" },
+            { rowNumber: 109, nome: "Melinda", tipologia: "frutta", scadenza: "2025-05-15" }
+        ];
+        let selectedProducts = [];
+
+        // --- Funzioni di Rendering ---
+        function renderProducts(showAll = true) {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filterTerm = filterSelect.value;
+            let productsToRender = allProducts;
+
+            if (!showAll) {
+                productsToRender = allProducts.filter(p => 
+                    p.nome.toLowerCase().includes(searchTerm) && (!filterTerm || p.tipologia === filterTerm)
+                );
+            }
+
+            resultsBody.innerHTML = ''; 
+            productsToRender.forEach(p => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer';
+                row.dataset.rowNumber = p.rowNumber;
+                row.innerHTML = `
+                    <td class="p-4">${p.nome}</td>
+                    <td class="p-4 capitalize">${p.tipologia}</td>
+                    <td class="p-4">${new Date(p.scadenza).toLocaleDateString('it-IT')}</td>
+                `;
+                resultsBody.appendChild(row);
+            });
+        }
+        
+        // --- Logica di Selezione Multipla ---
+        resultsBody.addEventListener('click', (e) => {
+            const clickedRow = e.target.closest('tr');
+            if (!clickedRow) return;
+
+            const rowNumber = clickedRow.dataset.rowNumber;
+            const product = allProducts.find(p => p.rowNumber == rowNumber);
+            const indexInSelected = selectedProducts.findIndex(p => p.rowNumber == rowNumber);
+
+            if (indexInSelected > -1) {
+                // Se è già selezionato, lo rimuovo
+                selectedProducts.splice(indexInSelected, 1);
+                clickedRow.classList.remove('selected-row');
+            } else {
+                // Altrimenti, lo aggiungo
+                selectedProducts.push(product);
+                clickedRow.classList.add('selected-row');
+            }
+            
+            // Abilita/disabilita il pulsante
+            uscitaButton.disabled = selectedProducts.length === 0;
+            successMessage.textContent = '';
+        });
+
+        // --- Logica di Uscita (Simulata) ---
+        uscitaButton.addEventListener('click', () => {
+            if (selectedProducts.length === 0) return;
+
+            uscitaButton.disabled = true;
+            uscitaButton.textContent = 'Registrazione...';
+
+            setTimeout(() => {
+                const today = new Date().toLocaleDateString('it-IT');
+                const productNames = selectedProducts.map(p => p.nome).join(', ');
+
+                successMessage.textContent = `Prodotti "${productNames}" usciti dal magazzino il ${today}.`;
+                
+                const selectedRowNumbers = selectedProducts.map(p => p.rowNumber);
+                allProducts = allProducts.filter(p => !selectedRowNumbers.includes(p.rowNumber));
+                
+                renderProducts(true);
+                selectedProducts = [];
+
+                uscitaButton.textContent = 'Registra Data di Uscita';
+            }, 1000);
+        });
+
+        // --- Inizializzazione ---
+        searchButton.addEventListener('click', () => renderProducts(false));
+        document.addEventListener('DOMContentLoaded', () => renderProducts(true));
+
+    </script>
+</body>
+</html>
